@@ -13,7 +13,7 @@ const Weather = () => {
       if (!city.trim()) {
         return alert("Enter city name first");
       }
-      const apiKey = "9b77b8c8dd34819975c426571d13a521";
+      const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
       const url = await fetch(
         `http://api.weatherstack.com/current?access_key=${apiKey}&query=${city}`,
       );
