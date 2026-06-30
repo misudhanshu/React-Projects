@@ -6,24 +6,37 @@ const Weather = () => {
   const [weatherData, setWeatherData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [location, setLocation] = useState("");
+  const [error, setError] = useState(null);
 
   const fetchWeather = async () => {
     try {
+      setError(null)
       setIsLoading(true);
       if (!city.trim()) {
         return alert("Enter city name first");
+      }
+      if (!city) {
+        setError("City not found!");
       }
       const apiKey = "9b77b8c8dd34819975c426571d13a521";
       const url = await fetch(
         `http://api.weatherstack.com/current?access_key=${apiKey}&query=${city}`,
       );
       const data = await url.json();
+      if (data.success === false) {
+        setError("City not found!");
+        setIsLoading(false);
+        return;
+      }
+      setError(null);
       setWeatherData(data.current);
       setLocation(data.location);
       setCity("");
       setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setError("Something went wrong. Please try again.");
+      setIsLoading(false);
     }
   };
 
@@ -60,6 +73,7 @@ const Weather = () => {
             ) : (
               ""
             )}
+            {error && <h3>{error}</h3>}
           </div>
         )}
       </div>
